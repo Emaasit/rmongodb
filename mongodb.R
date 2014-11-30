@@ -59,6 +59,23 @@ View(res)
 class(res)
 
 
+# create another query object 
+query2 <- mongo.bson.from.JSON('{"stats.hits": {"$gte":90}}')
+
+# Find the records in my collection where hits >=90
+cursor2 <- mongo.find(mongo, "emaasit.players", query2)
+
+# Step though the matching records and display them
+while (mongo.cursor.next(cursor2))
+        print(mongo.cursor.value(cursor2))
+
+#or get the results in a matrix
+res2 <- mongo.find.batch(mongo, "emaasit.players", query2)
+View(res2)
+
+
+
+
 
 
 
