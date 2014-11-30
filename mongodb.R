@@ -1,6 +1,9 @@
 #This is y first rmongodb script
 
 ##install rmongodb package
+install.packages("rmongodb")
+library(rmongodb)
+
 install.packages("devtools")
 library(devtools)
 install_github("mongosoup/rmongodb")
@@ -22,3 +25,42 @@ mongo.get.database.collections(mongo, db="emaasit")
 #count how many documents (rows) we have in a collection
 DBNS = "emaasit.players"
 mongo.count(mongo, ns = DBNS)
+
+#Query the data
+##When exploring what you have for data, it's really helpful to use the find.one concept.
+tmp = mongo.find.one(mongo, ns = "emaasit.players")
+tmp
+class(tmp)#mongo.bson is not a normal R object
+
+#convert Mongo's BSON objects to a list
+tmp = mongo.bson.to.list(tmp)
+class(tmp)
+names(tmp)
+
+#brings all records from a collection into a dataframe
+find_all = mongo.find.all(mongo, ns = DBNS)
+nrow(find_all)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
