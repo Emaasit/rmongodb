@@ -72,7 +72,7 @@ while (mongo.cursor.next(cursor2))
 #or get the results in a matrix
 res2 <- mongo.find.batch(mongo, "emaasit.players", query2)
 View(res2)
-
+mongo.count(mongo, "emaasit.players", query)
 
 
 
