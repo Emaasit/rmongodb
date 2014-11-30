@@ -1,0 +1,119 @@
+
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>cd C:\MongoDB\bin
+
+C:\MongoDB\bin>mongod.exe
+
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>C:\MongoDB\bin\mongo
+MongoDB shell version: 2.6.5
+connecting to: test
+>  show dbs
+admin  (empty)
+local  0.078GB
+
+> use emaasit
+switched to db emaasit
+
+> db.createCollection("players")
+{ "ok" : 1 }
+
+> show dbs
+admin    (empty)
+emaasit  0.078GB
+local    0.078GB
+
+> show collections
+players
+system.indexes
+
+> db.createCollection("teams")
+{ "ok" : 1 }
+
+> show collections
+players
+system.indexes
+teams
+
+> use emaasit
+switched to db emaasit
+
+> show collections
+players
+system.indexes
+teams
+>
+
+> var mydocuments=[{
+        _id: "cabrera",
+        first_name: "Miguel",
+        last_name: "Cabrera",
+        stats:
+        [
+            {
+                year: 2013,
+                team_id: "tigers",
+                position: "3B",
+                hits: 193,
+                hr: 44,
+                rbi: 137,
+                ba: .348
+            }
+        ]
+    },
+    
+    {
+        _id: "lee",
+        first_name: "Cliff",
+        last_name: "Lee",
+        stats:
+        [
+            {
+                year: 2013,
+                team_id: "phillies",
+                position: "P",
+                wins: 14,
+                losses: 8,
+                era: 2.87,
+                walks: 32,
+                so: 222
+            }
+        ]
+    }]
+
+> db.players.insert(mydocuments)
+
+> db.players.find(
+    {"stats.position": "3B"},
+    {first_name: 1, last_name: 1, "stats.position":1, "stats.ba": 1}
+).pretty()
+
+
+> db.players.aggregate
+  ([
+    {$unwind:"$stats"},
+    {$project: {
+    	first_name:1,
+    	last_name:1,
+    	"stats.wins":1,
+    	"stats.losses":1,
+    	"stats.position":1,
+    	winning_season:{$cmp: ["$stats.wins", "$stats.losses"]}
+    }},
+
+    {$match: {winning_season: 1}},
+    {$project: {
+        first_name:1,
+    	last_name:1,
+        "stats.wins": 1,
+        "stats.losses": 1,
+        "stats.position":1
+    }},
+
+    {$sort: {"stats.wins": -1}}
+
+  ]).pretty()

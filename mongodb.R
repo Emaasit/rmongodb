@@ -74,21 +74,47 @@ res2 <- mongo.find.batch(mongo, "emaasit.players", query2)
 View(res2)
 mongo.count(mongo, "emaasit.players", query)
 
+#get keys
+mongo.summary(mongo, "emaasit.players")
 
 
+#Build a Dataset
+#let's use the plyr & dplyr package
+library(plyr); library(dplyr)
 
+## create the empty data frame
+players = data.frame(stringsAsFactors = FALSE)
 
+## create the namespace
+DBNS = "emaasit.players"
 
+## create the cursor we will iterate over, basically a select * in SQL
+cursor3 = mongo.find(mongo, DBNS)
 
+## create the counter
+i = 1
 
+## iterate over the cursor
+while (mongo.cursor.next(cursor3)) {
+        # iterate and grab the next record
+        tmp3 = mongo.bson.to.list(mongo.cursor.value(cursor3))
+        # make it a dataframe
+        tmp.df = as.data.frame(t(unlist(tmp3)), stringsAsFactors = F)
+        # bind to the master dataframe
+        players = rbind.fill(players, tmp.df)
+        # to print a message, uncomment the next 2 lines cat('finished game ', i,
+        # '\n') i = i +1
+}
 
+#now let's look at our dataset "players"
+class(players)
+names(players)
+head(players)
 
+#then you can perform any operation on the datafram
+myvars<-c("first_name","last_name", "stats.0.hits")
+subset_data<-players[,myvars]
 
-
-
-
-
-
-
-
-
+#disconnect mongodb
+mongo.disconnect(mongo)
+mongo.destroy(mongo)
