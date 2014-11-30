@@ -40,6 +40,7 @@ names(tmp)
 #brings all records from a collection into a dataframe
 find_all = mongo.find.all(mongo, ns = DBNS)
 nrow(find_all)
+View(find_all)
 
 
 
