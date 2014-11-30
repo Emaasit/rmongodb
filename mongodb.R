@@ -42,11 +42,21 @@ find_all = mongo.find.all(mongo, ns = DBNS)
 nrow(find_all)
 View(find_all)
 
+# create query object 
+query <- mongo.bson.from.JSON('{"stats.position":"P"}')
 
+# Find the records in my collection where position =="P"
+cursor <- mongo.find(mongo, "emaasit.players", query)
+class(cursor)
 
+# Step though the matching records and display them
+while (mongo.cursor.next(cursor))
+        print(mongo.cursor.value(cursor))
 
-
-
+#or get the results in a matrix
+res <- mongo.find.batch(mongo, "emaasit.players", query)
+View(res)
+class(res)
 
 
 
