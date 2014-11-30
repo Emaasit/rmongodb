@@ -3,7 +3,8 @@
 ##install rmongodb package
 install.packages("rmongodb")
 library(rmongodb)
-
+  
+       #or
 install.packages("devtools")
 library(devtools)
 install_github("mongosoup/rmongodb")
@@ -118,3 +119,8 @@ subset_data<-players[,myvars]
 #disconnect mongodb
 mongo.disconnect(mongo)
 mongo.destroy(mongo)
+
+# load example data set from rmongodb
+data(zips)
+head(zips)
+dim(zips)
