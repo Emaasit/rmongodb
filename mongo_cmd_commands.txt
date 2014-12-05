@@ -117,3 +117,6 @@ teams
     {$sort: {"stats.wins": -1}}
 
   ]).pretty()
+  
+  /*loading a js script*/
+  load("C:/MongoDB/emaasitcs689hw8.js")
